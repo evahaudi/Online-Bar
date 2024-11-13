@@ -3,15 +3,16 @@ import { Typography, TextField, Button, Grid, Paper, Link, useMediaQuery, useThe
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Import axios
 
-const Register = () => {
+const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    phone: '', // Add phone number to match the API payload
-    username: '', // Add username to match the API payload
   });
 
-  const navigate = useNavigate(); // Hook to navigate after successful registration
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const navigate = useNavigate(); // Hook to navigate after successful login
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -21,35 +22,25 @@ const Register = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Prepare the payload using form data
-    const payload = {
-      phone: formData.phone,
-      username: formData.username,
-      email: formData.email,
-      password: formData.password,
-    };
+    setLoading(true);
+    setError(null);
 
     try {
-      // Make the API request with axios
-      const response = await axios.post('https://login-y0ha.onrender.com/sign-up', payload);
+      const response = await axios.post('https://login-y0ha.onrender.com/login', {
+        email: formData.email,
+        password: formData.password,
+      });
 
-      // Log the response data to console for debugging
-      console.log('Response Data:', response.data);
-
-      // Check if registration was successful
+      // If login is successful, redirect to Dashboard page
       if (response.status === 200) {
-        // Redirect to login page if successful
-        navigate('/login');
-      } else {
-        // Handle errors or unsuccessful registration
-        console.error('Registration failed:', response.data);
-        alert(response.data.message || 'Something went wrong!');
+        localStorage.setItem('userToken', response.data.token); // Store the token if needed
+        navigate('/dashboard'); // Redirect to the dashboard page after successful login
       }
-    } catch (error) {
-      // Log error to console for debugging
-      console.error('Error during registration:', error);
-      alert('Network error. Please try again.');
+    } catch (err) {
+      setError('Invalid credentials. Please try again.');
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -58,7 +49,7 @@ const Register = () => {
   const paperWidth = isSmallScreen ? '300px' : '330px';
 
   return (
-    <Grid container justifyContent="center" alignItems="center">
+    <Grid container justifyContent="center" alignItems="center" style={{ minHeight: '100vh' }}>
       <Grid item xs={12} sm={8} md={6} lg={4} container justifyContent="center">
         <Paper
           elevation={3}
@@ -71,78 +62,73 @@ const Register = () => {
             borderRadius: 10,
           }}
         >
+          <Typography variant="h5" align="center" style={{ marginBottom: '1rem' }}>
+            Login
+          </Typography>
+          {error && (
+            <Typography color="error" variant="body2" align="center" style={{ marginBottom: '1rem' }}>
+              {error}
+            </Typography>
+          )}
           <form onSubmit={handleSubmit}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                <Typography variant="subtitle1">Email</Typography>
                 <TextField
+                  required
+                  fullWidth
+                  label="Email"
                   name="email"
-                  type="email"
                   value={formData.email}
                   onChange={handleChange}
-                  fullWidth
-                  size="small"
+                  variant="outlined"
+                  type="email"
                 />
               </Grid>
               <Grid item xs={12}>
-                <Typography variant="subtitle1">Password</Typography>
                 <TextField
+                  required
+                  fullWidth
+                  label="Password"
                   name="password"
-                  type="password"
                   value={formData.password}
                   onChange={handleChange}
-                  fullWidth
-                  size="small"
+                  variant="outlined"
+                  type="password"
                 />
               </Grid>
               <Grid item xs={12}>
-                <Typography variant="subtitle1">Phone</Typography>
-                <TextField
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
+                <Button
+                  type="submit"
                   fullWidth
-                  size="small"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant="subtitle1">Username</Typography>
-                <TextField
-                  name="username"
-                  value={formData.username}
-                  onChange={handleChange}
-                  fullWidth
-                  size="small"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Button type="submit" variant="contained" color="primary" size="small" fullWidth>
-                  Sign Up
+                  variant="contained"
+                  color="primary"
+                  sx={{ padding: '10px' }}
+                  disabled={loading}
+                >
+                  {loading ? 'Logging in...' : 'Login'}
                 </Button>
-                <br />
-                <br />
-                <Grid item xs={12}>
-                  <Typography variant="body2">
-                    Already have an account?{' '}
-                    <Link href="/login">
-                      Login here
-                    </Link>
-                  </Typography>
-                </Grid>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant="body2">
-                  <Link href="/forgotpwd">
-                    Forgot your password?
-                  </Link>
-                </Typography>
               </Grid>
             </Grid>
           </form>
+          <Grid container justifyContent="center" style={{ marginTop: '1rem' }}>
+            <Typography variant="body2">
+              Don't have an account?{' '}
+              <Link href="/register" style={{ textDecoration: 'none' }}>
+                Sign Up
+              </Link>
+            </Typography>
+          </Grid>
+          <Grid container justifyContent="center" style={{ marginTop: '0.5rem' }}>
+            <Typography variant="body2">
+              <Link href="/forgotpwd" style={{ textDecoration: 'none' }}>
+                Forgot your password?
+              </Link>
+            </Typography>
+          </Grid>
         </Paper>
       </Grid>
     </Grid>
   );
 };
 
-export default Register;
+export default Login;

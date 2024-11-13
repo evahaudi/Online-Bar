@@ -12,7 +12,7 @@ const Login = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  
+
   const navigate = useNavigate(); // Used for redirecting after successful login
 
   // Handle form field changes
@@ -54,11 +54,14 @@ const Login = () => {
     <Container component="main" maxWidth="xs">
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 8 }}>
         <Typography variant="h5">Login</Typography>
+        
+        {/* Display error message if login fails */}
         {error && (
           <Typography color="error" variant="body2" sx={{ marginTop: 1 }}>
             {error}
           </Typography>
         )}
+        
         <form onSubmit={handleSubmit} style={{ width: '100%', marginTop: '1rem' }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -71,6 +74,7 @@ const Login = () => {
                 onChange={handleChange}
                 variant="outlined"
                 type="email"
+                autoComplete="email"
               />
             </Grid>
             <Grid item xs={12}>
@@ -83,6 +87,7 @@ const Login = () => {
                 onChange={handleChange}
                 variant="outlined"
                 type="password"
+                autoComplete="current-password"
               />
             </Grid>
             <Grid item xs={12}>
@@ -99,6 +104,16 @@ const Login = () => {
             </Grid>
           </Grid>
         </form>
+        
+        {/* Link to register page */}
+        <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
+          <Typography variant="body2" color="textSecondary">
+            Don't have an account?{' '}
+            <Button href="/" color="primary" size="small">
+              Sign Up
+            </Button>
+          </Typography>
+        </Box>
       </Box>
     </Container>
   );
