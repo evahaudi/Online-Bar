@@ -21,38 +21,34 @@ const Register = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Prepare the payload using form data
+  
     const payload = {
       phone: formData.phone,
       username: formData.username,
       email: formData.email,
       password: formData.password,
     };
-
+  
     try {
-      // Make the API request with axios
       const response = await axios.post('https://login-y0ha.onrender.com/sign-up', payload);
-
-      // Log the response data to console for debugging
+  
+      // Log the response for debugging
       console.log('Response Data:', response.data);
-
-      // Check if registration was successful
-      if (response.status === 200) {
-        // Redirect to login page if successful
-        navigate('/login');
+  
+      // Check if the response indicates success via the message
+      if (response.data.message === 'User signed up successfully') {
+        console.log('Redirecting to login...');
+        navigate('/login', { replace: true });
       } else {
-        // Handle errors or unsuccessful registration
         console.error('Registration failed:', response.data);
         alert(response.data.message || 'Something went wrong!');
       }
     } catch (error) {
-      // Log error to console for debugging
       console.error('Error during registration:', error);
       alert('Network error. Please try again.');
     }
   };
-
+  
   const theme = useTheme();
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const paperWidth = isSmallScreen ? '300px' : '330px';
