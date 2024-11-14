@@ -77,7 +77,7 @@ const Register = () => {
                 <Typography variant="subtitle1">Email</Typography>
                 <TextField
                   name="email"
-                  type="text"
+                  type="email"
                   value={formData.email}
                   onChange={handleChange}
                   fullWidth
