@@ -19,39 +19,55 @@ const Register = () => {
   };
 
   // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    // Prepare the payload using form data
-    const payload = {
-      phone: formData.phone,
-      username: formData.username,
-      email: formData.email,
-      password: formData.password,
-    };
-
-    try {
-      // Make the API request with axios
-      const response = await axios.post('https://login-y0ha.onrender.com/sign-up', payload);
-
-      // Log the response data to console for debugging
-      console.log('Response Data:', response.data);
-
-      // Check if registration was successful
-      if (response.status === 200) {
-        // Redirect to login page if successful
-        navigate('/login');
-      } else {
-        // Handle errors or unsuccessful registration
-        console.error('Registration failed:', response.data);
-        alert(response.data.message || 'Something went wrong!');
-      }
-    } catch (error) {
-      // Log error to console for debugging
-      console.error('Error during registration:', error);
-      alert('Network error. Please try again.');
-    }
+  // Prepare the payload using form data
+  const payload = {
+    phone: formData.phone,
+    username: formData.username,
+    email: formData.email,
+    password: formData.password,
   };
+
+  // Log the payload to console before sending
+  console.log('Payload:', payload);
+
+  try {
+    // Make the API request with axios
+    const response = await axios.post('https://login-y0ha.onrender.com/sign-up', payload);
+
+    // Log the response data to console for debugging
+    console.log('Response Data:', response.data);
+
+    // Check if registration was successful
+    if (response.status === 200) {
+      // Redirect to login page if successful
+      navigate('/login');
+    } else {
+      // Handle errors or unsuccessful registration
+      console.error('Registration failed:', response.data);
+      alert(response.data.message || 'Something went wrong!');
+    }
+  } catch (error) {
+    // Check if error is from Axios and log detailed error information
+    if (error.response) {
+      // Server responded with a status other than 2xx
+      console.error('Response Error:', error.response.data);
+      console.error('Status Code:', error.response.status);
+      alert(error.response.data.message || 'Server error occurred. Please try again.');
+    } else if (error.request) {
+      // Request was made but no response received
+      console.error('Request Error: No response received', error.request);
+      alert('Network error. No response received from the server.');
+    } else {
+      // Other errors, such as setting up the request
+      console.error('Error during setup:', error.message);
+      alert('An error occurred while setting up the request.');
+    }
+  }
+};
+
 
   const theme = useTheme();
   const isSmallScreen = useMediaQuery('(max-width:600px)');
