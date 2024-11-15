@@ -208,11 +208,11 @@ const Dashboard = () => {
                     label="Date"
                     type="date"
                     name="date"
-                    value={formData.date}
-                    onChange={handleInputChange}
+                    value={variance.date}
+                    onChange={(e) => handleVarianceChange(index, 'date', e.target.value)}
                     fullWidth
                     required
-                    InputLabelProps={{ shrink: true }}
+                    
                   />
                   <TextField
                     label="Person Name"
