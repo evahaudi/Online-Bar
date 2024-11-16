@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Typography, TextField, Button, Grid, Paper, Link, useMediaQuery, useTheme } from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Import axios
+import Swal from 'sweetalert2';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -34,7 +35,7 @@ const Login = () => {
       // If login is successful, redirect to Dashboard page
       if (response.status === 200) {
         localStorage.setItem('userToken', response.data.token); // Store the token if needed
-        navigate('/dashboard'); // Redirect to the dashboard page after successful login
+        navigate('/managerdirectorsdashboard'); // Redirect to the dashboard page after successful login
       }
     } catch (err) {
       setError('Invalid credentials. Please try again.');

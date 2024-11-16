@@ -2,8 +2,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './Login';
-import Dashboard from './Dashboard';
+import ManagerDashboard from './ManagerDashboard';
+import ManagerDirectorDashboard from './ManagerDirectorDashboard ';
 import Register from './Register'
+
+
 
 const App = () => {
   return (
@@ -11,7 +14,8 @@ const App = () => {
       <Routes>
       <Route path="/" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/managerdashboard" element={<ManagerDashboard />} />
+        <Route path="/managerdirectorsdashboard" element={<ManagerDirectorDashboard />} />
       </Routes>
     </Router>
   );

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Typography, TextField, Button, Grid, Paper, Link, useMediaQuery, useTheme } from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Import axios
+import Swal from 'sweetalert2';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -21,20 +22,20 @@ const Register = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const payload = {
       phone: formData.phone,
       username: formData.username,
       email: formData.email,
       password: formData.password,
     };
-  
+
     try {
       const response = await axios.post('https://login-y0ha.onrender.com/sign-up', payload);
-  
+
       // Log the response for debugging
       console.log('Response Data:', response.data);
-  
+
       // Check if the response indicates success via the message
       if (response.data.message === 'User signed up successfully') {
         console.log('Redirecting to login...');
@@ -45,10 +46,15 @@ const Register = () => {
       }
     } catch (error) {
       console.error('Error during registration:', error);
-      alert('Network error. Please try again.');
+      Swal.fire({
+        title: 'Error!',
+        text: 'Phone number already exist',
+        icon: 'error',
+        confirmButtonText: 'Try Again',
+      });
     }
   };
-  
+
   const theme = useTheme();
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const paperWidth = isSmallScreen ? '300px' : '330px';
